@@ -1,15 +1,20 @@
 import { Input, Button } from "@nextui-org/react";
-import { EyeFilledIcon } from "./extras/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "./extras/EyeSlashFilledIcon";
-
-import { useState } from "react";
+import { IoEye } from "react-icons/io5";
+import { IoMdEyeOff } from "react-icons/io";
+import { UserContext } from "../contexts/UserContext";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 
-    const [users] = useState([
+    const navigate = useNavigate();
+
+    /* const [users] = useState([
         { username: 'daniel', password: '9999' },
         { username: 'jose', password: '7777' }
-    ]);
+    ]); */
+
+    const { users } = useContext(UserContext);
 
     //Estado para guardar el usuario y contraseña
     const [user, setUser] = useState({ username: '', password: '' });
@@ -22,6 +27,8 @@ const Login = () => {
         });
     };
 
+    const { setUser: setAuthUser } = useContext(UserContext);
+
     //Manejar el envio del formulario
     const handlerSubmit = (e) => {
         e.preventDefault();
@@ -33,7 +40,9 @@ const Login = () => {
 
         if (userFound) {
             console.log('Usuario encontrado');
-            alert('Bienvenido');
+            //Guardar el usuario en el estado global
+            setAuthUser(userFound);
+            navigate('/welcome');
         } else {
             console.log('Usuario no encontrado');
             alert('Usuario o Contraseña incorrectos');
@@ -69,9 +78,9 @@ const Login = () => {
                     endContent={
                         <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
                             {isVisible ? (
-                                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                                <IoEye style={{fontSize: '1.5rem' }}/>
                             ) : (
-                                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                                <IoMdEyeOff style={{fontSize: '1.5rem' }}/>
                             )}
                         </button>
                     }
