@@ -3,6 +3,7 @@ import { UserContext } from "../contexts/UserContext";
 import BtnModal from "../components/BtnModal";
 import { Image } from "@nextui-org/react";
 import RegisterForm from "./RegisterForm";
+import IngressForm from "./IngressForm";
 
 const Welcome = () => {
   const { user } = useContext(UserContext);
@@ -21,8 +22,11 @@ const Welcome = () => {
         <Image alt="Card background" className="object-cover rounded-xl mb-4" src="/src/assets/poli.jpeg" />
       </main>
 
-      <BtnModal title={"Registro"}>
+      <BtnModal title={"Registro"} textButton={"Registrar"}>
         <RegisterForm />
+      </BtnModal>
+      <BtnModal title={"Ingreso"} textButton={"Ingresar"}>
+        <IngressForm />
       </BtnModal>
       <footer></footer>
     </section>
