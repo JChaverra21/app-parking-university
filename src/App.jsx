@@ -5,7 +5,6 @@ import Login from "./screens/Login";
 import Welcome from "./screens/Welcome";
 
 function App() {
-
   return (
     <NextUIProvider>
       <BrowserRouter>
@@ -17,7 +16,7 @@ function App() {
         </UserProvider>
       </BrowserRouter>
     </NextUIProvider>
-  )
+  );
 }
 
-export default App
+export default App;
