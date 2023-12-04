@@ -1,12 +1,15 @@
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import BtnModal from "../components/BtnModal";
-import { Image } from "@nextui-org/react";
+import { Image, Input } from "@nextui-org/react";
 import RegisterForm from "./RegisterForm";
 import IngressForm from "./IngressForm";
+import { ExitForm } from "./ExitForm";
 
 const Welcome = () => {
-  const { user } = useContext(UserContext);
+  const { user, userRegister } = useContext(UserContext);
+
+  console.log("registros", userRegister);
 
   return (
     <section className="flex flex-col items-center pt-5">
@@ -27,6 +30,9 @@ const Welcome = () => {
       </BtnModal>
       <BtnModal title={"Ingreso"} textButton={"Ingresar"}>
         <IngressForm />
+      </BtnModal>
+      <BtnModal title={"Salida"} textButton={"Salida"}>
+        <ExitForm />
       </BtnModal>
       <footer></footer>
     </section>

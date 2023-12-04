@@ -11,6 +11,12 @@ export const UserProvider = ({ children }) => {
     { username: "jose", password: "7777" },
   ]);
 
+  const cellsCar = [
+    { cell: "01", empty: true, vehicle: "" },
+    { cell: "02", empty: true, vehicle: "" },
+    { cell: "03", empty: true, vehicle: "" },
+  ];
+
   //Nuevo estado para el usuario logueado
   const [user, setUser] = useState(null);
 
@@ -21,10 +27,50 @@ export const UserProvider = ({ children }) => {
   const [plate, setPlate] = useState("");
   const [error, setError] = useState(false);
   const [errorPlate, setErrorPlate] = useState(false);
+  const [carCells, setCarCells] = useState(cellsCar);
 
   //Estados para almacenar los datos del brand y model
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
+
+  const addCarCell = (car, cell) => {
+    const existVehicle = carCells.some((item) => item.vehicle === car);
+
+    if (existVehicle) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "El vehiculo ya esta en el parqueadero",
+      });
+      return;
+    }
+
+    const newCells = carCells.map((item) => {
+      if (item.cell === cell && item.empty) {
+        return { ...item, empty: false, vehicle: car };
+      } else if (item.cell === cell && !item.empty) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "La celda ya esta ocupada",
+        });
+      }
+      return item;
+    });
+
+    setCarCells(newCells);
+  };
+
+  const deleteCarCell = (plate) => {
+    const newCells = carCells.map((item) => {
+      if (item.vehicle === plate && !item.empty) {
+        return { ...item, empty: true, vehicle: "" };
+      }
+      return item;
+    });
+
+    setCarCells(newCells);
+  };
 
   const handlerSelectModel = (e) => {
     setModel(e.target.innerText);
@@ -64,8 +110,6 @@ export const UserProvider = ({ children }) => {
 
   // Funcion para registrar los datos
   const handlerRegister = () => {
-    console.log("Registros", userRegister);
-
     //Verifica si algun campo requerido esta vacio
     if (!idUser || !selectedVehicleType || !plate || !model || !brand) {
       setError(true);
@@ -131,7 +175,7 @@ export const UserProvider = ({ children }) => {
         vehiclesPlates: [{ plate, vehicleType: selectedVehicleType, modelCylinder: model, brand: brand }],
       };
       setUserRegister([...userRegister, newRegister]);
-      
+
       Swal.fire({
         icon: "success",
         title: "Registro exitoso",
@@ -193,9 +237,12 @@ export const UserProvider = ({ children }) => {
         handlerSelectVehicle,
         handlerIdUserChange,
         handlerRegister,
-        //handlerGetUsers,
+        deleteCarCell,
+        //handlerGetUsers,s
         errorPlate,
-        setErrorPlate
+        setErrorPlate,
+        addCarCell,
+        carCells,
       }}
     >
       {children}
