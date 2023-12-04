@@ -20,6 +20,7 @@ export const UserProvider = ({ children }) => {
   const [brandChange, setBrandChange] = useState([]);
   const [plate, setPlate] = useState("");
   const [error, setError] = useState(false);
+  const [errorPlate, setErrorPlate] = useState(false);
 
   //Estados para almacenar los datos del brand y model
   const [brand, setBrand] = useState("");
@@ -34,7 +35,7 @@ export const UserProvider = ({ children }) => {
   };
 
   const handlerPlateChange = (e) => {
-    setPlate(e.target.value);
+    setPlate(e.target.value.toUpperCase());
   };
 
   //identificacion de la persona
@@ -71,6 +72,26 @@ export const UserProvider = ({ children }) => {
       return;
     }
 
+    // Valida el formato de la placa segun el tipo de vehiculo seleccionado
+    let regexPlate;
+    if (selectedVehicleType === "car") {
+      regexPlate = /^[A-Z]{3}\d{3}$/;
+    } else if (selectedVehicleType === "motorcycle") {
+      //regexPlate = /^[A-Z0-9]{6}$/;
+      console.log("entro a moto");
+      regexPlate = /^[A-Z]{3}\d{2}[A-Z]{1}$/;
+    }
+
+    const isValidPlate = regexPlate.test(plate);
+    console.log("isValidPlate", isValidPlate);
+    // Si la placa no cumple con el formato, muestra un mensaje de error
+    if (!isValidPlate) {
+      setErrorPlate(true);
+      return;
+    } else {
+      setErrorPlate(false);
+    }
+
     //Verifica si el usuario ya existe
     const userExist = userRegister.find((user) => user.idUser === idUser);
 
@@ -99,6 +120,8 @@ export const UserProvider = ({ children }) => {
         setIdUser("");
         setPlate("");
         setSelectedVehicleType("");
+        /* setSecondAutocompleteOptions("");
+        setBrandChange(""); */
       } else {
         alert("El usuario ya tiene 2 vehiculos registrados");
       }
@@ -108,17 +131,26 @@ export const UserProvider = ({ children }) => {
         vehiclesPlates: [{ plate, vehicleType: selectedVehicleType, modelCylinder: model, brand: brand }],
       };
       setUserRegister([...userRegister, newRegister]);
+      
+      Swal.fire({
+        icon: "success",
+        title: "Registro exitoso",
+        text: "El vehiculo se ha registrado correctamente",
+      });
 
       // Limpia los campos del formulario
       setIdUser("");
       setPlate("");
       setSelectedVehicleType("");
+      /* setSecondAutocompleteOptions("");
+      setBrandChange(""); */
     }
   };
 
   //Funcion para reiniar el estado de error
   const handlerError = () => {
     setError(false);
+    setErrorPlate(false);
     setIdUser("");
     setPlate("");
   };
@@ -162,6 +194,8 @@ export const UserProvider = ({ children }) => {
         handlerIdUserChange,
         handlerRegister,
         //handlerGetUsers,
+        errorPlate,
+        setErrorPlate
       }}
     >
       {children}

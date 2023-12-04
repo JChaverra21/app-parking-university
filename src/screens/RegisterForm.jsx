@@ -18,7 +18,9 @@ const RegisterForm = () => {
     handlerPlateChange,
     handlerSelectVehicle,
     handlerIdUserChange,
-    handlerRegister, } = useContext(UserContext);
+    handlerRegister,
+    errorPlate,
+    setErrorPlate } = useContext(UserContext);
 
   /*   const [selectedVehicleType, setSelectedVehicleType] = useState("");
     const [secondAutocompleteOptions, setSecondAutocompleteOptions] = useState([]);
@@ -156,7 +158,17 @@ const RegisterForm = () => {
         onChange={handlerPlateChange}
         className="max-w-xs text-black"
         isInvalid={error}
-        errorMessage={error ? "Por favor ingresa la placa del vehiculo" : ""}
+        errorMessage={/* error ? "Por favor ingresa la placa del vehiculo" : "" */
+          error
+            ? "Por favor ingresa la placa del vehiculo"
+            : errorPlate
+              ? selectedVehicleType === "car"
+                ? "El formato de placa de carro no es válido. Ejemplo: ABC123"
+                : selectedVehicleType === "motorcycle"
+                  ? "El formato de placa de moto no es válido. Ejemplo: EWH09F"
+                  : "El formato de placa no es válido"
+              : ""
+        }
       />
       <Autocomplete
         isRequired
