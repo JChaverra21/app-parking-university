@@ -10,7 +10,7 @@ export const Parking = () => {
 
   return (
     <section className="bg-gray-500 h-screen ">
-      {/* <Image src="/src/assets/mapaCarros.png" className="absolute" width="100%" alt="icono" /> */}
+      {/* <Image src="/src/assets/pavimento.jpeg" className="" alt="icono" /> */}
       <Button onClick={() => navigate("/welcome")}>Volver</Button>
 
       <article className="absolute flex flex-wrap w-[70%] ml-10 mt-5 gap-1 z-10">
