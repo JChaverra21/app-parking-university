@@ -21,10 +21,6 @@ const IngressForm = () => {
     setDateTime(e.target.value);
   };
 
-  //   const handleCellChange = (e) => {
-  //     setCell(e.target.value);
-  //   };
-
   const [vehicleUser, setVehicleUser] = useState([]);
 
   const handleRegisterIngress = () => {
@@ -32,15 +28,6 @@ const IngressForm = () => {
     const validationPlate = userRegister.find((user) => {
       return user.vehiclesPlates.some((vehicle) => vehicle.plate === idPlate);
     });
-
-    // Mostrar la placa del vehiculo
-    let vehicleInfo;
-    if (validationPlate) {
-      vehicleInfo = validationPlate.vehiclesPlates.find((vehicle) => vehicle.plate === idPlate);
-    }
-
-    console.log("existe el", validationPlate);
-    console.log("la placa", vehicleInfo, "existe");
 
     if (idPlate == "")
       return Swal.fire({
@@ -66,44 +53,26 @@ const IngressForm = () => {
           timer: 1000,
         });
       }
-
-      // Validar que la placa exista
-      /* if (!validationPlate)
-                return Swal.fire({
-                    position: "top-end",
-                    icon: "error",
-                    title: "La placa no existe",
-                    showConfirmButton: false,
-                    timer: 1000,
-                }); */
-    } else {
-      // Validar que la cedula exista
-      if (!searchUser)
-        return Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: "El usuario no existe",
-          showConfirmButton: false,
-          timer: 1000,
-        });
     }
 
-    /* if (!searchUser)
-            return Swal.fire({
-                position: "top-end",
-                icon: "error",
-                title: "El usuario no existe",
-                showConfirmButton: false,
-                timer: 1000,
-            }); */
+    const validation = selected === "cedula" ? searchUser : validationPlate;
 
+    console.log("validation", validation);
+    if (validation === undefined)
+      return Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: "El usuario no existe",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+
+    if (selected === "placa") {
+      setNewPlate(idPlate);
+    }
     setValidation(true);
-    //setVehicleUser(searchUser.vehiclesPlates.map((vehicle) => vehicle.plate));
-    // Manejar el caso en el que searchUser sea undefined
     const userVehiclesPlates = searchUser ? searchUser.vehiclesPlates.map((vehicle) => vehicle.plate) : [];
     setVehicleUser(userVehiclesPlates);
-
-    console.log(vehicleUser);
   };
 
   // Efecto para resetear el estado cuando se cambia el tipo de identificación
@@ -116,6 +85,7 @@ const IngressForm = () => {
   }, [selected]);
 
   console.log("celdas", carCells);
+  console.log(newPlate);
 
   return (
     <form className="flex flex-col items-center gap-5">
@@ -146,7 +116,7 @@ const IngressForm = () => {
               label="Tipo de vehiculo"
               defaultItems={vehicleUser.map((item, index) => ({ value: item, key: index }))}
               placeholder="Selecciona el vehiculo"
-              defaultSelectedKey="1"
+              // defaultSelectedKey="1"
               className="max-w-xs"
               isInvalid={error}
               errorMessage={error ? "Por favor selecciona el tipo de vehiculo" : ""}

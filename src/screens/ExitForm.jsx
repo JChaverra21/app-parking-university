@@ -1,6 +1,7 @@
 import { Button, Input } from "@nextui-org/react";
 import React, { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
+import Swal from "sweetalert2";
 
 export const ExitForm = () => {
   const [value, setValue] = React.useState("");
@@ -12,6 +13,13 @@ export const ExitForm = () => {
 
   const handleExit = () => {
     deleteCarCell(value);
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "El vehiculo salio correctamente",
+      showConfirmButton: false,
+      timer: 1000,
+    });
   };
 
   console.log(carCells);

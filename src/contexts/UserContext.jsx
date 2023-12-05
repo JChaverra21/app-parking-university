@@ -15,6 +15,11 @@ export const UserProvider = ({ children }) => {
     { cell: "01", empty: true, vehicle: "" },
     { cell: "02", empty: true, vehicle: "" },
     { cell: "03", empty: true, vehicle: "" },
+    { cell: "04", empty: true, vehicle: "" },
+    { cell: "05", empty: true, vehicle: "" },
+    { cell: "06", empty: true, vehicle: "" },
+    { cell: "07", empty: true, vehicle: "" },
+    { cell: "08", empty: true, vehicle: "" },
   ];
 
   //Nuevo estado para el usuario logueado
@@ -34,15 +39,16 @@ export const UserProvider = ({ children }) => {
   const [model, setModel] = useState("");
 
   const addCarCell = (car, cell) => {
+    console.log("car a ingresar", car);
     const existVehicle = carCells.some((item) => item.vehicle === car);
+    console.log("existVehicle", existVehicle);
 
     if (existVehicle) {
-      Swal.fire({
+      return Swal.fire({
         icon: "error",
         title: "Oops...",
         text: "El vehiculo ya esta en el parqueadero",
       });
-      return;
     }
 
     const newCells = carCells.map((item) => {
@@ -59,6 +65,13 @@ export const UserProvider = ({ children }) => {
     });
 
     setCarCells(newCells);
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "Vehiculo ingresado correctamente",
+      showConfirmButton: false,
+      timer: 1000,
+    });
   };
 
   const deleteCarCell = (plate) => {

@@ -4,13 +4,13 @@
 const { nextui } = require("@nextui-org/react");
 
 export default {
-  content: [
-    "./src/**/*.{html,js,jsx,ts,tsx}",
-    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./src/**/*.{html,js,jsx,ts,tsx}", "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: "#196844",
+      },
+    },
   },
   plugins: [nextui()],
-}
-
+};
