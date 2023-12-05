@@ -12,6 +12,18 @@ export const ExitForm = () => {
   };
 
   const handleExit = () => {
+    const vehicleExist = carCells.find((item) => item.plate === value);
+
+    if (!vehicleExist) {
+      return Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: "El vehiculo no esta en el parqueadero",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+    }
+
     deleteCarCell(value);
     Swal.fire({
       position: "top-end",

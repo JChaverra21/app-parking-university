@@ -1,4 +1,4 @@
-import { Input, Button, Card, CardHeader, CardBody, CardFooter, Divider, Link, Image } from "@nextui-org/react";
+import { Input, Button, Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 import { IoEye } from "react-icons/io5";
 import { IoMdEyeOff } from "react-icons/io";
 import { UserContext } from "../contexts/UserContext";
