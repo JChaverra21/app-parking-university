@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import { Image, Popover, PopoverContent, PopoverTrigger, Tooltip } from "@nextui-org/react";
-export const CellCar = ({ item }) => {
+import { Image, Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
+export const CellMotorcycle = ({ item }) => {
   return (
     <div className="w-60 h-60 border border-x-5 text-white border-t-0 my-8  border-b-0 border-white flex justify-center items-center ">
       {item.empty ? (
@@ -13,7 +13,7 @@ export const CellCar = ({ item }) => {
           <Popover placement="top">
             <PopoverTrigger>
               <Image
-                src="/src/assets/car.png"
+                src="/src/assets/moto.png"
                 className="cursor-pointer  hover:scale-110"
                 width="300"
                 height="100"
@@ -23,7 +23,7 @@ export const CellCar = ({ item }) => {
             <PopoverContent className="text-center mt-4">
               <div className=" py-2  text-left">
                 <p>
-                  <span className="font-semibold">Modelo:</span>
+                  <span className="font-semibold">Cilindraje:</span>
                 </p>
                 <p>
                   <span className="font-semibold">Marca:</span>

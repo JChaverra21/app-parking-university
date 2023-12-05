@@ -4,6 +4,7 @@ import { IoMdEyeOff } from "react-icons/io";
 import { UserContext } from "../contexts/UserContext";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -39,7 +40,13 @@ const Login = () => {
       navigate("/welcome");
     } else {
       console.log("Usuario no encontrado");
-      alert("Usuario o Contraseña incorrectos");
+      Swal.fire({
+        position: "top-center",
+        icon: "error",
+        title: "Usuario o contraseña incorrectos.",
+        showConfirmButton: false,
+        timer: 1000,
+      });
     }
   };
 

@@ -22,6 +22,17 @@ export const UserProvider = ({ children }) => {
     { cell: "08", empty: true, vehicle: "" },
   ];
 
+  const cellsMotorcycle = [
+    { cell: "09", empty: true, vehicle: "" },
+    { cell: "10", empty: true, vehicle: "" },
+    { cell: "11", empty: true, vehicle: "" },
+    { cell: "12", empty: true, vehicle: "" },
+    { cell: "13", empty: true, vehicle: "" },
+    { cell: "14", empty: true, vehicle: "" },
+    { cell: "15", empty: true, vehicle: "" },
+    { cell: "16", empty: true, vehicle: "" },
+  ];
+
   //Nuevo estado para el usuario logueado
   const [user, setUser] = useState(null);
 
@@ -33,6 +44,7 @@ export const UserProvider = ({ children }) => {
   const [error, setError] = useState(false);
   const [errorPlate, setErrorPlate] = useState(false);
   const [carCells, setCarCells] = useState(cellsCar);
+  const [motorcycleCells, setMotorcycleCells] = useState(cellsMotorcycle);
 
   //Estados para almacenar los datos del brand y model
   const [brand, setBrand] = useState("");
@@ -66,7 +78,7 @@ export const UserProvider = ({ children }) => {
 
     setCarCells(newCells);
     Swal.fire({
-      position: "top-end",
+      position: "top-center",
       icon: "success",
       title: "Vehiculo ingresado correctamente",
       showConfirmButton: false,
@@ -75,6 +87,7 @@ export const UserProvider = ({ children }) => {
   };
 
   const deleteCarCell = (plate) => {
+    console.log("placa a eliminar", plate);
     const newCells = carCells.map((item) => {
       if (item.vehicle === plate && !item.empty) {
         return { ...item, empty: true, vehicle: "" };
@@ -83,6 +96,55 @@ export const UserProvider = ({ children }) => {
     });
 
     setCarCells(newCells);
+  };
+
+  //Funciones para el ingreso de las motos
+  const addMotorcycleCell = (motorcycle, cell) => {
+    console.log("moto a ingresar", motorcycle);
+    const existVehicle = motorcycleCells.some((item) => item.vehicle === motorcycle);
+    console.log("existVehicle", existVehicle);
+
+    if (existVehicle) {
+      return Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "El vehiculo ya esta en el parqueadero",
+      });
+    }
+
+    const newCells = motorcycleCells.map((item) => {
+      if (item.cell === cell && item.empty) {
+        return { ...item, empty: false, vehicle: motorcycle };
+      } else if (item.cell === cell && !item.empty) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "La celda ya esta ocupada",
+        });
+      }
+      return item;
+    });
+
+    setMotorcycleCells(newCells);
+    Swal.fire({
+      position: "top-center",
+      icon: "success",
+      title: "Vehiculo ingresado correctamente",
+      showConfirmButton: false,
+      timer: 1000,
+    });
+
+    console.log("cells", motorcycleCells);
+  };
+
+  const deleteMotorcycleCell = (plate) => {
+    const newCells = motorcycleCells.map((item) => {
+      if (item.vehicle === plate && !item.empty) {
+        return { ...item, empty: true, vehicle: "" };
+      }
+      return item;
+    });
+    setMotorcycleCells(newCells);
   };
 
   const handlerSelectModel = (e) => {
@@ -156,7 +218,13 @@ export const UserProvider = ({ children }) => {
     const plateExist = userRegister.some((user) => user.vehiclesPlates.some((vehicle) => vehicle.plate === plate));
 
     if (plateExist) {
-      alert("La placa ya existe");
+      Swal.fire({
+        position: "top-center",
+        icon: "error",
+        title: "La placa ya existe.",
+        showConfirmButton: false,
+        timer: 1000,
+      });
     } else if (userExist) {
       if (userExist.vehiclesPlates.length < 2) {
         const newVehicle = {
@@ -180,7 +248,13 @@ export const UserProvider = ({ children }) => {
         /* setSecondAutocompleteOptions("");
         setBrandChange(""); */
       } else {
-        alert("El usuario ya tiene 2 vehiculos registrados");
+        Swal.fire({
+          position: "top-center",
+          icon: "error",
+          title: "El usuario ya tiene 2 vehiculos registrados.",
+          showConfirmButton: false,
+          timer: 1000,
+        });
       }
     } else {
       const newRegister = {
@@ -256,6 +330,9 @@ export const UserProvider = ({ children }) => {
         setErrorPlate,
         addCarCell,
         carCells,
+        motorcycleCells,
+        addMotorcycleCell,
+        deleteMotorcycleCell,
       }}
     >
       {children}

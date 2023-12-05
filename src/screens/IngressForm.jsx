@@ -4,7 +4,7 @@ import { UserContext } from "../contexts/UserContext";
 import Swal from "sweetalert2";
 
 const IngressForm = () => {
-  const { error, userRegister, addCarCell, carCells } = useContext(UserContext);
+  const { error, userRegister, addCarCell, carCells, motorcycleCells, addMotorcycleCell, } = useContext(UserContext);
 
   const [idPlate, setIdPlate] = useState("");
   const [dateTime, setDateTime] = useState("");
@@ -31,7 +31,7 @@ const IngressForm = () => {
 
     if (idPlate == "")
       return Swal.fire({
-        position: "top-end",
+        position: "top-center",
         icon: "error",
         title: `${selected === "cedula" ? "La cedula" : "La placa"} no puede estar vacia`,
         showConfirmButton: false,
@@ -46,7 +46,7 @@ const IngressForm = () => {
       regexMotorcycle = /^[A-Z]{3}\d{2}[A-Z]{1}$/;
       if (!regexCar.test(idPlate) && !regexMotorcycle.test(idPlate)) {
         return Swal.fire({
-          position: "top-end",
+          position: "top-center",
           icon: "error",
           title: "El formato de la placa no es válido.",
           showConfirmButton: false,
@@ -60,9 +60,9 @@ const IngressForm = () => {
     console.log("validation", validation);
     if (validation === undefined)
       return Swal.fire({
-        position: "top-end",
+        position: "top-center",
         icon: "error",
-        title: "El usuario no existe",
+        title: `${selected === "cedula" ? "El usuario no existe" : "La placa no existe"}`,
         showConfirmButton: false,
         timer: 1000,
       });
@@ -84,8 +84,41 @@ const IngressForm = () => {
     setVehicleUser([]);
   }, [selected]);
 
-  console.log("celdas", carCells);
+  console.log("celdas carros", carCells);
+  console.log("celdas motos", motorcycleCells);
   console.log(newPlate);
+
+  // Funcion para llamar a la funcion addCarCell o addMotorcycleCell
+  let regexCar = /^[A-Z]{3}\d{3}$/;
+  let regexMotorcycle = /^[A-Z]{3}\d{2}[A-Z]{1}$/;
+  const handleIngress = (newPlate, cell) => {
+    if (selected === "placa") {
+      /* if (!regexCar.test(idPlate) && !regexMotorcycle.test(idPlate)) {
+        return Swal.fire({
+          position: "top-center",
+          icon: "error",
+          title: "El formato de la placa no es válido.",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      } */
+      if (regexCar.test(idPlate)) {
+        console.log("placa de carro");
+        addCarCell(newPlate, cell);
+      } else if (regexMotorcycle.test(idPlate)) {
+        console.log("placa de moto");
+        addMotorcycleCell(newPlate, cell);
+      }
+    } /* else if (selected === "cedula") {
+      if (regexCar.test(newPlate)) {
+        console.log("placa de carro");
+        addCarCell(newPlate, cell);
+      } else if (regexMotorcycle.test(newPlate)) {
+        console.log("placa de moto");
+        addMotorcycleCell(newPlate, cell);
+      }
+    } */
+  };
 
   return (
     <form className="flex flex-col items-center gap-5">
@@ -147,7 +180,8 @@ const IngressForm = () => {
           <Autocomplete
             isRequired
             label="Celda"
-            defaultItems={carCells.filter((item) => item.empty === true)}
+            //defaultItems={carCells.filter((item) => item.empty === true)}
+            defaultItems={regexCar.test(idPlate) ? carCells.filter((item) => item.empty === true) : motorcycleCells.filter((item) => item.empty === true)}
             placeholder="Ingresa el numero de celda"
             defaultSelectedKey="1"
             className="max-w-xs"
@@ -161,8 +195,8 @@ const IngressForm = () => {
               </AutocompleteItem>
             )}
           </Autocomplete>
-          <Button onClick={() => addCarCell(newPlate, cell)} className="max-w-xs" color="primary">
-            Registrar
+          <Button onClick={() => handleIngress(newPlate, cell)} className="max-w-xs" color="primary">
+            Ingresar
           </Button>
         </>
       )}
