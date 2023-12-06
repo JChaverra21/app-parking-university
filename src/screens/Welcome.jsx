@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 import BtnModal from "../components/BtnModal";
 import RegisterForm from "./RegisterForm";
@@ -23,7 +23,9 @@ const Welcome = () => {
   const navigate = useNavigate();
   const { user, userRegister } = useContext(UserContext);
 
-  console.log("registros", userRegister);
+  useEffect(() => {
+    console.log("Registros", userRegister);
+  }, [userRegister]);
 
   return (
     <section className="flex flex-col items-center  pt-20">

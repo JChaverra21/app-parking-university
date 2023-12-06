@@ -82,7 +82,6 @@ const RegisterForm = () => {
         className="max-w-xs"
         isInvalid={error}
         errorMessage={error ? "Por favor seleccione el modelo o cilindraje" : ""}
-        /* onSelect={(value) => setModel(value)} */
       >
         {(item) => (
           <AutocompleteItem onClick={handlerSelectModel} key={item.value} className="text-black">

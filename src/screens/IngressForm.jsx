@@ -13,6 +13,8 @@ const IngressForm = () => {
   const [selected, setSelected] = useState("cedula");
   const [newPlate, setNewPlate] = useState("");
   const [carSelected, setCarSelected] = useState({});
+  const [vehicleUser, setVehicleUser] = useState([]);
+
   const handleIdPlateChange = (e) => {
     setIdPlate(e.target.value.toUpperCase());
   };
@@ -21,15 +23,28 @@ const IngressForm = () => {
     setDateTime(e.target.value);
   };
 
-  const [vehicleUser, setVehicleUser] = useState([]);
+  const ingressForId = (id) => {
+    const searchUser = userRegister.find((user) => user.idUser === id);
 
-  const handleRegisterIngress = () => {
-    const searchUser = userRegister.find((user) => user.idUser === idPlate);
-    const validationPlate = userRegister.find((user) => {
-      return user.vehiclesPlates.some((vehicle) => vehicle.plate === idPlate);
-    });
+    if (searchUser === undefined) {
+      return Swal.fire({
+        position: "top-center",
+        icon: "error",
+        title: "El usuario no existe",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+    }
 
-    if (idPlate == "")
+    setCarSelected(searchUser.vehiclesPlates.find((vehicle) => vehicle.plate === id));
+
+    const userVehiclesPlates = searchUser ? searchUser.vehiclesPlates.map((vehicle) => vehicle.plate) : [];
+    setVehicleUser(userVehiclesPlates);
+    setValidation(true);
+  };
+
+  const ingressForPlate = (plate) => {
+    if (plate == "")
       return Swal.fire({
         position: "top-center",
         icon: "error",
@@ -38,28 +53,48 @@ const IngressForm = () => {
         timer: 1000,
       });
 
-    // Validar la placa con la expresión regular según el tipo de vehículo
-    let regexCar;
-    let regexMotorcycle;
-    if (selected === "placa") {
-      regexCar = /^[A-Z]{3}\d{3}$/;
-      regexMotorcycle = /^[A-Z]{3}\d{2}[A-Z]{1}$/;
-      if (!regexCar.test(idPlate) && !regexMotorcycle.test(idPlate)) {
-        return Swal.fire({
-          position: "top-center",
-          icon: "error",
-          title: "El formato de la placa no es válido.",
-          showConfirmButton: false,
-          timer: 1000,
-        });
-      }
+    const validationPlate = userRegister.find((user) => {
+      return user.vehiclesPlates.some((vehicle) => vehicle.plate === plate);
+    });
+
+    if (validationPlate === undefined) {
+      return Swal.fire({
+        position: "top-center",
+        icon: "error",
+        title: "La placa no existe",
+        showConfirmButton: false,
+        timer: 1000,
+      });
     }
 
-    const validation = selected === "cedula" ? searchUser : validationPlate;
+    const existVehicle =
+      carCells.some((item) => item.vehicle === plate) || motorcycleCells.some((item) => item.vehicle === plate);
+    if (existVehicle) {
+      return Swal.fire({
+        position: "top-center",
+        icon: "error",
+        title: "El vehiculo ya se encuentra en el parqueadero",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+    }
 
-    console.log("validation", validation);
-    setCarSelected(validation.vehiclesPlates.find((vehicle) => vehicle.plate === idPlate));
-    if (validation === undefined)
+    let regexCar;
+    let regexMotorcycle;
+
+    regexCar = /^[A-Z]{3}\d{3}$/;
+    regexMotorcycle = /^[A-Z]{3}\d{2}[A-Z]{1}$/;
+    if (!regexCar.test(plate) && !regexMotorcycle.test(plate)) {
+      return Swal.fire({
+        position: "top-center",
+        icon: "error",
+        title: "El formato de la placa no es válido.",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+    }
+
+    if (validationPlate === undefined)
       return Swal.fire({
         position: "top-center",
         icon: "error",
@@ -68,12 +103,17 @@ const IngressForm = () => {
         timer: 1000,
       });
 
-    if (selected === "placa") {
-      setNewPlate(idPlate);
-    }
+    setCarSelected(validationPlate.vehiclesPlates.find((vehicle) => vehicle.plate === plate));
+    setNewPlate(plate);
     setValidation(true);
-    const userVehiclesPlates = searchUser ? searchUser.vehiclesPlates.map((vehicle) => vehicle.plate) : [];
-    setVehicleUser(userVehiclesPlates);
+  };
+
+  const handleRegisterIngress = () => {
+    if (selected === "cedula") {
+      ingressForId(idPlate);
+    } else {
+      ingressForPlate(idPlate);
+    }
   };
 
   // Efecto para resetear el estado cuando se cambia el tipo de identificación
@@ -85,8 +125,12 @@ const IngressForm = () => {
     setVehicleUser([]);
   }, [selected]);
 
-  console.log("celdas carros", carCells);
-  console.log("celdas motos", motorcycleCells);
+  // useEffect(() => {
+  //   if (carCells.length === 0 || motorcycleCells.length === 0) {
+  //     console.log("celdas carros", carCells);
+  //     console.log("celdas motos", motorcycleCells);
+  //   }
+  // }, [carCells, motorcycleCells]);
 
   // Funcion para llamar a la funcion addCarCell o addMotorcycleCell
   let regexCar = /^[A-Z]{3}\d{3}$/;
@@ -95,10 +139,10 @@ const IngressForm = () => {
   const handleIngress = (newPlate, cell) => {
     if (regexCar.test(newPlate)) {
       console.log("placa de carro");
-      addCarCell(newPlate, cell);
+      addCarCell(newPlate, dateTime, cell);
     } else if (regexMotorcycle.test(newPlate)) {
       console.log("placa de moto");
-      addMotorcycleCell(newPlate, cell);
+      addMotorcycleCell(newPlate, dateTime, cell);
     }
   };
 
@@ -107,6 +151,7 @@ const IngressForm = () => {
       ? carCells.filter((item) => item.empty === true)
       : motorcycleCells.filter((item) => item.empty === true);
 
+  console.log(dateTime);
   return (
     <form className="flex flex-col items-center gap-5">
       <RadioGroup
@@ -167,7 +212,7 @@ const IngressForm = () => {
                 labelPlacement="outside"
                 defaultValue={`Marca: ${carSelected.brand}\n${
                   carSelected.vehicleType === "car" ? "Modelo" : "Cilindraje"
-                }: ${carSelected.vehicleType === "car" ? carSelected.modelCylinder : carSelected.Cylinder}`}
+                }: ${carSelected.modelCylinder}`}
                 className="max-w-xs"
               />
             </>

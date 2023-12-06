@@ -868,6 +868,10 @@ video {
   margin-top: 1rem;
 }
 
+.-mt-28 {
+  margin-top: -7rem;
+}
+
 .box-border {
   box-sizing: border-box;
 }

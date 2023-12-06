@@ -12,21 +12,21 @@ export const UserProvider = ({ children }) => {
   ]);
 
   const cellsCar = [
-    { cell: "01", empty: true, vehicle: "" },
-    { cell: "02", empty: true, vehicle: "" },
-    { cell: "03", empty: true, vehicle: "" },
-    { cell: "04", empty: true, vehicle: "" },
-    { cell: "05", empty: true, vehicle: "" },
-    { cell: "06", empty: true, vehicle: "" },
+    { cell: "01", empty: true, vehicle: "", date: "" },
+    { cell: "02", empty: true, vehicle: "", date: "" },
+    { cell: "03", empty: true, vehicle: "", date: "" },
+    { cell: "04", empty: true, vehicle: "", date: "" },
+    { cell: "05", empty: true, vehicle: "", date: "" },
+    { cell: "06", empty: true, vehicle: "", date: "" },
   ];
 
   const cellsMotorcycle = [
-    { cell: "09", empty: true, vehicle: "" },
-    { cell: "10", empty: true, vehicle: "" },
-    { cell: "11", empty: true, vehicle: "" },
-    { cell: "12", empty: true, vehicle: "" },
-    { cell: "13", empty: true, vehicle: "" },
-    { cell: "14", empty: true, vehicle: "" },
+    { cell: "09", empty: true, vehicle: "", date: "" },
+    { cell: "10", empty: true, vehicle: "", date: "" },
+    { cell: "11", empty: true, vehicle: "", date: "" },
+    { cell: "12", empty: true, vehicle: "", date: "" },
+    { cell: "13", empty: true, vehicle: "", date: "" },
+    { cell: "14", empty: true, vehicle: "", date: "" },
   ];
 
   //Nuevo estado para el usuario logueado
@@ -42,11 +42,17 @@ export const UserProvider = ({ children }) => {
   const [carCells, setCarCells] = useState(cellsCar);
   const [motorcycleCells, setMotorcycleCells] = useState(cellsMotorcycle);
 
+  //Crea el estado para almacenar los registros
+  const [userRegister, setUserRegister] = useState([]);
+
+  //identificacion de la persona
+  const [idUser, setIdUser] = useState("");
+
   //Estados para almacenar los datos del brand y model
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
 
-  const addCarCell = (car, cell) => {
+  const addCarCell = (car, fecha, cell) => {
     console.log("car a ingresar", car);
     const existVehicle = carCells.some((item) => item.vehicle === car);
     console.log("existVehicle", existVehicle);
@@ -61,7 +67,7 @@ export const UserProvider = ({ children }) => {
 
     const newCells = carCells.map((item) => {
       if (item.cell === cell && item.empty) {
-        return { ...item, empty: false, vehicle: car };
+        return { ...item, empty: false, vehicle: car, date: fecha };
       } else if (item.cell === cell && !item.empty) {
         Swal.fire({
           icon: "error",
@@ -74,7 +80,7 @@ export const UserProvider = ({ children }) => {
 
     setCarCells(newCells);
     Swal.fire({
-      position: "top-center",
+      position: "center",
       icon: "success",
       title: "Vehiculo ingresado correctamente",
       showConfirmButton: false,
@@ -95,7 +101,7 @@ export const UserProvider = ({ children }) => {
   };
 
   //Funciones para el ingreso de las motos
-  const addMotorcycleCell = (motorcycle, cell) => {
+  const addMotorcycleCell = (motorcycle, fecha, cell) => {
     console.log("moto a ingresar", motorcycle);
     const existVehicle = motorcycleCells.some((item) => item.vehicle === motorcycle);
     console.log("existVehicle", existVehicle);
@@ -110,7 +116,7 @@ export const UserProvider = ({ children }) => {
 
     const newCells = motorcycleCells.map((item) => {
       if (item.cell === cell && item.empty) {
-        return { ...item, empty: false, vehicle: motorcycle };
+        return { ...item, empty: false, vehicle: motorcycle, date: fecha };
       } else if (item.cell === cell && !item.empty) {
         Swal.fire({
           icon: "error",
@@ -155,9 +161,6 @@ export const UserProvider = ({ children }) => {
     setPlate(e.target.value.toUpperCase());
   };
 
-  //identificacion de la persona
-  const [idUser, setIdUser] = useState("");
-
   const handlerIdUserChange = (e) => {
     setIdUser(e.target.value);
   };
@@ -165,7 +168,6 @@ export const UserProvider = ({ children }) => {
   //Autocomplete dinamico para el modelo y marca
   const handlerSelectVehicle = (e) => {
     setSelectedVehicleType(e.target.innerText);
-    console.log(e.target.innerText);
 
     if (e.target.innerText === "car") {
       setSecondAutocompleteOptions(carModel);
@@ -176,9 +178,6 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  //Crea el estado para almacenar los registros
-  const [userRegister, setUserRegister] = useState([]);
-
   // Funcion para registrar los datos
   const handlerRegister = () => {
     //Verifica si algun campo requerido esta vacio
@@ -187,91 +186,62 @@ export const UserProvider = ({ children }) => {
       return;
     }
 
-    // Valida el formato de la placa segun el tipo de vehiculo seleccionado
-    let regexPlate;
-    if (selectedVehicleType === "car") {
-      regexPlate = /^[A-Z]{3}\d{3}$/;
-    } else if (selectedVehicleType === "motorcycle") {
-      //regexPlate = /^[A-Z0-9]{6}$/;
-      console.log("entro a moto");
-      regexPlate = /^[A-Z]{3}\d{2}[A-Z]{1}$/;
-    }
+    const regexPlate = selectedVehicleType === "car" ? /^[A-Z]{3}\d{3}$/ : /^[A-Z]{3}\d{2}[A-Z]{1}$/;
 
-    const isValidPlate = regexPlate.test(plate);
-    console.log("isValidPlate", isValidPlate);
     // Si la placa no cumple con el formato, muestra un mensaje de error
-    if (!isValidPlate) {
+    if (!regexPlate.test(plate)) {
       setErrorPlate(true);
       return;
     } else {
       setErrorPlate(false);
     }
 
-    //Verifica si el usuario ya existe
+    // Verifica si el usuario ya existe
     const userExist = userRegister.find((user) => user.idUser === idUser);
+    console.log("userRegister", userExist);
 
     //Verifica si la placa ya existe
     const plateExist = userRegister.some((user) => user.vehiclesPlates.some((vehicle) => vehicle.plate === plate));
 
     if (plateExist) {
-      Swal.fire({
-        position: "top-center",
+      return Swal.fire({
+        position: "center",
         icon: "error",
         title: "La placa ya existe.",
         showConfirmButton: false,
         timer: 1000,
       });
-    } else if (userExist) {
-      if (userExist.vehiclesPlates.length < 2) {
-        const newVehicle = {
-          plate,
-          vehicleType: selectedVehicleType, // car or motorcycle
-          Cylinder: model,
-          brand: brand,
-        };
-        userExist.vehiclesPlates.push(newVehicle);
+    }
 
-        Swal.fire({
-          icon: "success",
-          title: "Registro exitoso",
-          text: "El vehiculo se ha registrado correctamente",
-        });
-
-        setUserRegister([...userRegister]);
-        setIdUser("");
-        setPlate("");
-        setSelectedVehicleType("");
-        /* setSecondAutocompleteOptions("");
-        setBrandChange(""); */
-      } else {
-        Swal.fire({
-          position: "top-center",
+    if (userExist) {
+      if (userExist.vehiclesPlates.length === 2) {
+        return Swal.fire({
+          position: "center",
           icon: "error",
           title: "El usuario ya tiene 2 vehiculos registrados.",
           showConfirmButton: false,
           timer: 1000,
         });
       }
+      userExist.vehiclesPlates.push({ plate, vehicleType: selectedVehicleType, modelCylinder: model, brand });
     } else {
       const newRegister = {
         idUser,
         vehiclesPlates: [{ plate, vehicleType: selectedVehicleType, modelCylinder: model, brand: brand }],
       };
       setUserRegister([...userRegister, newRegister]);
-
-      Swal.fire({
-        icon: "success",
-        title: "Registro exitoso",
-        text: "El vehiculo se ha registrado correctamente",
-      });
-
-      // Limpia los campos del formulario
-      setIdUser("");
-      setPlate("");
-      setSelectedVehicleType("");
-      /* setSecondAutocompleteOptions("");
-      setBrandChange(""); */
     }
+
+    Swal.fire({
+      icon: "success",
+      title: "Registro exitoso",
+      text: "El vehiculo se ha registrado correctamente",
+    });
+
+    // Limpia los campos del formulario
+    setIdUser("");
+    setPlate("");
+    setSelectedVehicleType("");
   };
 
   //Funcion para reiniar el estado de error
@@ -281,23 +251,6 @@ export const UserProvider = ({ children }) => {
     setIdUser("");
     setPlate("");
   };
-
-  /*     // Funcion para obtener los usuarios registrados
-    const handlerGetUsers = () => {
-        // Obtener la informacion de los vehiculos por medio del id o la placa
-        const userExist = userRegister.find((user) => user.idUser === idUser);
-        const plateExist = userRegister.find((user) => user.vehiclesPlates.some((vehicle) => vehicle.plate === plate));
-
-        if (userExist) {
-            //alert(`El usuario ${userExist.idUser} tiene los siguientes vehiculos registrados: ${userExist.vehiclesPlates.map((vehicle) => vehicle.plate)}`);
-            alert(`El usuario ${userExist.idUser} tiene los siguientes vehiculos registrados: 
-            ${userExist.vehiclesPlates.map((vehicle) => [vehicle.plate, vehicle.vehicleType, vehicle.brand, vehicle.modelCylinder])}`);
-        } else if (plateExist) {
-            alert(`El vehiculo con placa ${plateExist.vehiclesPlates.map((vehicle) => vehicle.plate)} pertenece al usuario ${plateExist.idUser}`);
-        } else {
-            alert("El usuario no existe");
-        }
-    } */
 
   return (
     <UserContext.Provider
@@ -321,7 +274,6 @@ export const UserProvider = ({ children }) => {
         handlerIdUserChange,
         handlerRegister,
         deleteCarCell,
-        //handlerGetUsers,s
         errorPlate,
         setErrorPlate,
         addCarCell,

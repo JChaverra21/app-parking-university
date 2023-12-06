@@ -23,6 +23,15 @@ export const ExitForm = () => {
   };
 
   const handleExit = () => {
+    if (selectedVehicleType === "" || selectedPlate === "") {
+      return Swal.fire({
+        position: "top-center",
+        icon: "error",
+        title: "Por favor selecciona el tipo de vehiculo y la placa",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+    }
     if (selectedVehicleType === "car") {
       deleteCarCell(selectedPlate);
       Swal.fire({
@@ -53,8 +62,6 @@ export const ExitForm = () => {
         placeholder="Tipo de vehiculo que saldra"
         defaultSelectedKey=""
         className="max-w-xs"
-        /* isInvalid={error}
-      errorMessage={error ? "Por favor selecciona el tipo de vehiculo" : ""} */
       >
         {(item) => (
           <AutocompleteItem value={item.value} onClick={handlerSelectVehicle} key={item.value} className="text-black">
@@ -76,8 +83,6 @@ export const ExitForm = () => {
         }
         placeholder="Selecciona el vehiculo"
         className="max-w-xs"
-        /* isInvalid={error}
-      errorMessage={error ? "Por favor selecciona el tipo de vehiculo" : ""} */
       >
         {(item) => (
           <AutocompleteItem
@@ -90,18 +95,6 @@ export const ExitForm = () => {
           </AutocompleteItem>
         )}
       </Autocomplete>
-      {/* <Input
-        isRequired
-        name="value"
-        type="text"
-        label="placa"
-        placeholder="ingrese la placa del vehiculo que saldra"
-        value={value}
-        onChange={handleChange}
-        className="max-w-xs text-black mb-3"
-      // isInvalid={error}
-      // errorMessage={error ? "Por favor ingresa la cédula del usuario" : ""}
-      /> */}
       <Button onClick={handleExit} className="max-w-xs" color="primary">
         Dar salida
       </Button>

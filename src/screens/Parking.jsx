@@ -8,6 +8,7 @@ import { IoIosArrowBack } from "react-icons/io";
 export const Parking = () => {
   const navigate = useNavigate();
   const { carCells, motorcycleCells } = useContext(UserContext);
+  console.log(carCells);
 
   return (
     <section className="bg-gray-500 h-screen ">

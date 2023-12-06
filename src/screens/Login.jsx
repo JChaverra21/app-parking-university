@@ -27,8 +27,6 @@ const Login = () => {
   //Manejar el envio del formulario
   const handlerSubmit = (e) => {
     e.preventDefault();
-    console.log(user);
-    console.log(users);
 
     //Validar si el usuario y contraseña son correctos
     const userFound = users.find((u) => u.username === user.username && u.password === user.password);
