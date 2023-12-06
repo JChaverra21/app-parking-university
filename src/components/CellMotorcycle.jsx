@@ -2,7 +2,7 @@
 import { Image, Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 export const CellMotorcycle = ({ item }) => {
   return (
-    <div className="w-60 h-60 border border-x-5 text-white border-t-0 my-8  border-b-0 border-white flex justify-center items-center ">
+    <div className="w-24 h-60 border border-x-5 text-white border-t-0   border-b-0 border-white flex justify-center items-center ">
       {item.empty ? (
         <h1 className="">{item.cell}</h1>
       ) : (
@@ -13,10 +13,10 @@ export const CellMotorcycle = ({ item }) => {
           <Popover placement="top">
             <PopoverTrigger>
               <Image
-                src="/src/assets/moto.png"
-                className="cursor-pointer  hover:scale-110"
-                width="300"
-                height="100"
+                src="/src/assets/motico.png"
+                className="cursor-pointer   hover:scale-110"
+                width="1200"
+                height="200"
                 alt="icono"
               />
             </PopoverTrigger>

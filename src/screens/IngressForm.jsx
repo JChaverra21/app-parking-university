@@ -1,10 +1,10 @@
-import { Autocomplete, AutocompleteItem, Button, Input, Radio, RadioGroup } from "@nextui-org/react";
+import { Autocomplete, AutocompleteItem, Button, Input, Radio, RadioGroup, Textarea } from "@nextui-org/react";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import Swal from "sweetalert2";
 
 const IngressForm = () => {
-  const { error, userRegister, addCarCell, carCells, motorcycleCells, addMotorcycleCell, } = useContext(UserContext);
+  const { error, userRegister, addCarCell, carCells, motorcycleCells, addMotorcycleCell } = useContext(UserContext);
 
   const [idPlate, setIdPlate] = useState("");
   const [dateTime, setDateTime] = useState("");
@@ -12,6 +12,7 @@ const IngressForm = () => {
   const [validation, setValidation] = useState(false);
   const [selected, setSelected] = useState("cedula");
   const [newPlate, setNewPlate] = useState("");
+  const [carSelected, setCarSelected] = useState({});
 
   const handleIdPlateChange = (e) => {
     setIdPlate(e.target.value.toUpperCase());
@@ -22,6 +23,8 @@ const IngressForm = () => {
   };
 
   const [vehicleUser, setVehicleUser] = useState([]);
+
+  console.log("carSelected", carSelected);
 
   const handleRegisterIngress = () => {
     const searchUser = userRegister.find((user) => user.idUser === idPlate);
@@ -58,6 +61,7 @@ const IngressForm = () => {
     const validation = selected === "cedula" ? searchUser : validationPlate;
 
     console.log("validation", validation);
+    setCarSelected(validation.vehiclesPlates.find((vehicle) => vehicle.plate === idPlate));
     if (validation === undefined)
       return Swal.fire({
         position: "top-center",
@@ -133,6 +137,7 @@ const IngressForm = () => {
       </RadioGroup>
       <Input
         isRequired
+        readOnly={validation}
         name="idPlate"
         type="text"
         label={selected === "cedula" ? "Identificación del usuario" : "Placa del vehiculo"}
@@ -143,12 +148,18 @@ const IngressForm = () => {
       />
       {validation && (
         <>
-          {selected !== "placa" && (
+          {selected !== "placa" ? (
             <Autocomplete
               isRequired
               label="Tipo de vehiculo"
               defaultItems={vehicleUser.map((item, index) => ({ value: item, key: index }))}
               placeholder="Selecciona el vehiculo"
+              onSelectionChange={() => {
+                const validationPlate = userRegister.find((user) => {
+                  return user.vehiclesPlates.some((vehicle) => vehicle.plate === newPlate);
+                });
+                setCarSelected(validationPlate.vehiclesPlates.find((vehicle) => vehicle.plate === newPlate));
+              }}
               // defaultSelectedKey="1"
               className="max-w-xs"
               isInvalid={error}
@@ -165,6 +176,18 @@ const IngressForm = () => {
                 </AutocompleteItem>
               )}
             </Autocomplete>
+          ) : (
+            <>
+              <Textarea
+                readOnly
+                label="Informacion vehiculo"
+                labelPlacement="outside"
+                defaultValue={`Marca: ${carSelected.brand}\n${
+                  carSelected.vehicleType === "car" ? "Modelo" : "Cilindraje"
+                }: ${carSelected.vehicleType === "car" ? carSelected.modelCylinder : carSelected.Cylinder}`}
+                className="max-w-xs"
+              />
+            </>
           )}
 
           <Input
@@ -181,7 +204,11 @@ const IngressForm = () => {
             isRequired
             label="Celda"
             //defaultItems={carCells.filter((item) => item.empty === true)}
-            defaultItems={regexCar.test(idPlate) ? carCells.filter((item) => item.empty === true) : motorcycleCells.filter((item) => item.empty === true)}
+            defaultItems={
+              regexCar.test(idPlate)
+                ? carCells.filter((item) => item.empty === true)
+                : motorcycleCells.filter((item) => item.empty === true)
+            }
             placeholder="Ingresa el numero de celda"
             defaultSelectedKey="1"
             className="max-w-xs"

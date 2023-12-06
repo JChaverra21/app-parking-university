@@ -14,13 +14,17 @@ export const Parking = () => {
       {/* <Image src="/src/assets/pavimento.jpeg" className="" alt="icono" /> */}
       <Button onClick={() => navigate("/welcome")}>Volver</Button>
 
-      <article className="absolute flex flex-wrap w-[70%] ml-10 mt-5 gap-1 z-10">
-        {carCells.map((item, index) => (
-          <CellCar key={index} item={item} />
-        ))}
-        {motorcycleCells.map((item, index) => (
-          <CellMotorcycle key={index} item={item} />
-        ))}
+      <article className="flex">
+        <div className=" border-r-3 border-yellow-500 mx-10 flex  w-[70%] flex-wrap">
+          {carCells.map((item, index) => (
+            <CellCar key={index} item={item} />
+          ))}
+        </div>
+        <div className="flex w-[30%] flex-wrap">
+          {motorcycleCells.map((item, index) => (
+            <CellMotorcycle key={index} item={item} />
+          ))}
+        </div>
       </article>
     </section>
   );
