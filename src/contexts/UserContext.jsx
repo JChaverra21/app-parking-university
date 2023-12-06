@@ -7,8 +7,8 @@ export const UserContext = createContext();
 // eslint-disable-next-line react/prop-types
 export const UserProvider = ({ children }) => {
   const [users] = useState([
-    { username: "daniel", password: "9999" },
-    { username: "jose", password: "7777" },
+    { username: "daniel ramirez", password: "9999" },
+    { username: "jose chaverra", password: "7777" },
   ]);
 
   const cellsCar = [
@@ -18,8 +18,6 @@ export const UserProvider = ({ children }) => {
     { cell: "04", empty: true, vehicle: "" },
     { cell: "05", empty: true, vehicle: "" },
     { cell: "06", empty: true, vehicle: "" },
-    { cell: "07", empty: true, vehicle: "" },
-    { cell: "08", empty: true, vehicle: "" },
   ];
 
   const cellsMotorcycle = [
@@ -29,8 +27,6 @@ export const UserProvider = ({ children }) => {
     { cell: "12", empty: true, vehicle: "" },
     { cell: "13", empty: true, vehicle: "" },
     { cell: "14", empty: true, vehicle: "" },
-    { cell: "15", empty: true, vehicle: "" },
-    { cell: "16", empty: true, vehicle: "" },
   ];
 
   //Nuevo estado para el usuario logueado

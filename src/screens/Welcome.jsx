@@ -7,8 +7,18 @@ import { ExitForm } from "./ExitForm";
 import { BsBoxArrowInLeft, BsBoxArrowInRight } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaParking } from "react-icons/fa";
-import { Button } from "@nextui-org/react";
+import { Button, Image, User } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
+import { RiLogoutCircleLine } from "react-icons/ri";
+
+function capitalizeName(cadena) {
+  var palabras = cadena.split(" ");
+
+  var resultado = palabras.map((palabra) => palabra.charAt(0).toUpperCase() + palabra.slice(1));
+
+  return resultado.join(" ");
+}
+
 const Welcome = () => {
   const navigate = useNavigate();
   const { user, userRegister } = useContext(UserContext);
@@ -16,26 +26,35 @@ const Welcome = () => {
   console.log("registros", userRegister);
 
   return (
-    <section className="flex flex-col items-center  pt-28">
+    <section className="flex flex-col items-center  pt-20">
       <img className="object-cover absolute top-0  w-screen h-screen" src="/src/assets/poliParking.jpeg" alt="Poli" />
       <div className="absolute top-0 w-screen h-screen bg-black opacity-80"></div>
-      <header className="text-center z-10 text-white">
-        <h4 className="font-bold text-large mb-4 mt-5 ">
-          {/* Bienvenido {user.username.charAt(0).toUpperCase() + user.username.slice(1)} a PoliParking */}
-        </h4>
+      <User
+        className="absolute top-0 right-0 z-10 pr-4 pt-4 text-white"
+        name={user ? capitalizeName(user.username) : ""}
+        description="Software developer"
+        avatarProps={{
+          src: "",
+          color: "primary",
+        }}
+      />
+      <Button
+        className="bg-transparent text-sm absolute top-0 left-0 z-10 ml-4 mt-4 text-white"
+        onClick={() => navigate("/")}
+      >
+        <RiLogoutCircleLine size={20} />
+        Cerrar Sesion
+      </Button>
+      <header className=" z-10 text-white">
+        <div className="flex flex-col items-center">
+          <Image alt="Logo" src="/src/assets/iconoPoli.png" width="50" height="50" />
+          <h4 className="font-bold text-large mb-4  ">PoliParking</h4>
+        </div>
         <p className="text-lg mb-8">
           En este espacio tendras el control de acceso de vehiculos al parqueadero de nuestra institucion
         </p>
       </header>
-      <main>
-        {/* <Image
-          alt="Card background"
-          className="object-cover rounded-xl mb-4 w-screen h-[50%]"
-          src="/src/assets/poli.jpeg"
-        /> */}
-      </main>
-
-      <div className="grid grid-cols-2 gap-5 ">
+      <main className="grid grid-cols-2 gap-5 ">
         <Button onClick={() => navigate("/parking")} className="bg-primary text-white shadow-lg mb-4 w-52 h-24 ">
           Parqueadero <FaParking fontSize={20} />
         </Button>
@@ -50,8 +69,11 @@ const Welcome = () => {
         <BtnModal title={"Salida"} textButton={"Salida"} icon={<BsBoxArrowInRight fontSize={20} />}>
           <ExitForm />
         </BtnModal>
-      </div>
-      <footer></footer>
+      </main>
+
+      <footer className="absolute  flex justify-center items-center z-10 w-full bottom-10">
+        <p className=" text-white text-sm ">© 2023 PoliParking. Desarrollado por Jose Chaverra y Daniel Ramirez</p>
+      </footer>
     </section>
   );
 };

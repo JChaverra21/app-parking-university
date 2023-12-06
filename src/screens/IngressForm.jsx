@@ -13,7 +13,6 @@ const IngressForm = () => {
   const [selected, setSelected] = useState("cedula");
   const [newPlate, setNewPlate] = useState("");
   const [carSelected, setCarSelected] = useState({});
-
   const handleIdPlateChange = (e) => {
     setIdPlate(e.target.value.toUpperCase());
   };
@@ -23,8 +22,6 @@ const IngressForm = () => {
   };
 
   const [vehicleUser, setVehicleUser] = useState([]);
-
-  console.log("carSelected", carSelected);
 
   const handleRegisterIngress = () => {
     const searchUser = userRegister.find((user) => user.idUser === idPlate);
@@ -90,43 +87,30 @@ const IngressForm = () => {
 
   console.log("celdas carros", carCells);
   console.log("celdas motos", motorcycleCells);
-  console.log(newPlate);
 
   // Funcion para llamar a la funcion addCarCell o addMotorcycleCell
   let regexCar = /^[A-Z]{3}\d{3}$/;
   let regexMotorcycle = /^[A-Z]{3}\d{2}[A-Z]{1}$/;
+
   const handleIngress = (newPlate, cell) => {
-    if (selected === "placa") {
-      /* if (!regexCar.test(idPlate) && !regexMotorcycle.test(idPlate)) {
-        return Swal.fire({
-          position: "top-center",
-          icon: "error",
-          title: "El formato de la placa no es válido.",
-          showConfirmButton: false,
-          timer: 1000,
-        });
-      } */
-      if (regexCar.test(idPlate)) {
-        console.log("placa de carro");
-        addCarCell(newPlate, cell);
-      } else if (regexMotorcycle.test(idPlate)) {
-        console.log("placa de moto");
-        addMotorcycleCell(newPlate, cell);
-      }
-    } /* else if (selected === "cedula") {
-      if (regexCar.test(newPlate)) {
-        console.log("placa de carro");
-        addCarCell(newPlate, cell);
-      } else if (regexMotorcycle.test(newPlate)) {
-        console.log("placa de moto");
-        addMotorcycleCell(newPlate, cell);
-      }
-    } */
+    if (regexCar.test(newPlate)) {
+      console.log("placa de carro");
+      addCarCell(newPlate, cell);
+    } else if (regexMotorcycle.test(newPlate)) {
+      console.log("placa de moto");
+      addMotorcycleCell(newPlate, cell);
+    }
   };
+
+  const validationCells = (plate) =>
+    regexCar.test(plate)
+      ? carCells.filter((item) => item.empty === true)
+      : motorcycleCells.filter((item) => item.empty === true);
 
   return (
     <form className="flex flex-col items-center gap-5">
       <RadioGroup
+        isDisabled={validation}
         label="Tipo de indetificacion: "
         orientation="horizontal"
         value={selected}
@@ -160,7 +144,6 @@ const IngressForm = () => {
                 });
                 setCarSelected(validationPlate.vehiclesPlates.find((vehicle) => vehicle.plate === newPlate));
               }}
-              // defaultSelectedKey="1"
               className="max-w-xs"
               isInvalid={error}
               errorMessage={error ? "Por favor selecciona el tipo de vehiculo" : ""}
@@ -200,14 +183,12 @@ const IngressForm = () => {
             onChange={handleDateTimeChange}
             className="max-w-xs text-black"
           />
+
           <Autocomplete
             isRequired
             label="Celda"
-            //defaultItems={carCells.filter((item) => item.empty === true)}
             defaultItems={
-              regexCar.test(idPlate)
-                ? carCells.filter((item) => item.empty === true)
-                : motorcycleCells.filter((item) => item.empty === true)
+              selected === "placa" ? validationCells(idPlate) : newPlate === "" ? [] : validationCells(newPlate)
             }
             placeholder="Ingresa el numero de celda"
             defaultSelectedKey="1"
@@ -222,6 +203,7 @@ const IngressForm = () => {
               </AutocompleteItem>
             )}
           </Autocomplete>
+
           <Button onClick={() => handleIngress(newPlate, cell)} className="max-w-xs" color="primary">
             Ingresar
           </Button>

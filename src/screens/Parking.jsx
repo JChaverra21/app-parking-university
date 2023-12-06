@@ -1,26 +1,34 @@
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { Button, Image } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { CellCar } from "../components/CellCar";
 import { CellMotorcycle } from "../components/CellMotorcycle";
-
+import { IoIosArrowBack } from "react-icons/io";
 export const Parking = () => {
   const navigate = useNavigate();
   const { carCells, motorcycleCells } = useContext(UserContext);
 
   return (
     <section className="bg-gray-500 h-screen ">
-      {/* <Image src="/src/assets/pavimento.jpeg" className="" alt="icono" /> */}
-      <Button onClick={() => navigate("/welcome")}>Volver</Button>
+      <Button
+        size="sm"
+        className="bg-transparent text-white text-lg flex items-center h"
+        onClick={() => navigate("/welcome")}
+      >
+        <IoIosArrowBack />
+        Volver
+      </Button>
 
-      <article className="flex">
-        <div className=" border-r-3 border-yellow-500 mx-10 flex  w-[70%] flex-wrap">
+      <article className="flex gap-48 mx-7">
+        <div className="  flex w-[59%] flex-wrap">
+          <h1 className="text-2xl text-white font-bold text-center w-full mb-1">Carros</h1>
           {carCells.map((item, index) => (
             <CellCar key={index} item={item} />
           ))}
         </div>
-        <div className="flex w-[30%] flex-wrap">
+        <div className="flex w-[25%] flex-wrap ">
+          <h1 className="text-2xl text-white font-bold text-center w-full  mb-1">Motos</h1>
           {motorcycleCells.map((item, index) => (
             <CellMotorcycle key={index} item={item} />
           ))}

@@ -1,40 +1,13 @@
-import { Autocomplete, AutocompleteItem, Button, Input } from "@nextui-org/react";
-import React, { useContext, useState } from "react";
+import { Autocomplete, AutocompleteItem, Button } from "@nextui-org/react";
+import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import Swal from "sweetalert2";
 import { vehicles } from "../data/Vehicle";
 
 export const ExitForm = () => {
-  const [value, setValue] = React.useState("");
   const { deleteCarCell, carCells, motorcycleCells, deleteMotorcycleCell } = useContext(UserContext);
   const [selectedVehicleType, setSelectedVehicleType] = useState("");
-  const [selectedPlate, setSelectedPlate] = useState("")
-
-  const handleChange = (e) => {
-    setValue(e.target.value.toUpperCase());
-  };
-
-  /* const handleExit = () => {
-    const vehicleExist = carCells.find((item) => item.vehicle === value);
-    if (!vehicleExist) {
-      return Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: "El vehiculo no esta en el parqueadero",
-        showConfirmButton: false,
-        timer: 1000,
-      });
-    }
-
-    deleteCarCell(value);
-    Swal.fire({
-      position: "top-end",
-      icon: "success",
-      title: "El vehiculo salio correctamente",
-      showConfirmButton: false,
-      timer: 1000,
-    });
-  }; */
+  const [selectedPlate, setSelectedPlate] = useState("");
 
   console.log(carCells);
 
@@ -43,9 +16,9 @@ export const ExitForm = () => {
     console.log(e.target.innerText);
 
     if (e.target.innerText === "car") {
-      setSelectedVehicleType(e.target.innerText)
+      setSelectedVehicleType(e.target.innerText);
     } else if (e.target.innerText === "motorcycle") {
-      setSelectedVehicleType(e.target.innerText)
+      setSelectedVehicleType(e.target.innerText);
     }
   };
 
@@ -80,7 +53,7 @@ export const ExitForm = () => {
         placeholder="Tipo de vehiculo que saldra"
         defaultSelectedKey=""
         className="max-w-xs"
-      /* isInvalid={error}
+        /* isInvalid={error}
       errorMessage={error ? "Por favor selecciona el tipo de vehiculo" : ""} */
       >
         {(item) => (
@@ -92,15 +65,18 @@ export const ExitForm = () => {
       <Autocomplete
         isRequired
         label="Tipo de vehiculo"
-        defaultItems={selectedVehicleType === "car" ? carCells
-          .filter((item) => item.vehicle) // Filtrar solo vehículos no vacíos
-          .map((item, index) => ({ value: item.vehicle, key: index }))
-          : motorcycleCells
-            .filter((item) => item.vehicle) // Filtrar solo vehículos no vacíos
-            .map((item, index) => ({ value: item.vehicle, key: index }))}
+        defaultItems={
+          selectedVehicleType === "car"
+            ? carCells
+                .filter((item) => item.vehicle) // Filtrar solo vehículos no vacíos
+                .map((item, index) => ({ value: item.vehicle, key: index }))
+            : motorcycleCells
+                .filter((item) => item.vehicle) // Filtrar solo vehículos no vacíos
+                .map((item, index) => ({ value: item.vehicle, key: index }))
+        }
         placeholder="Selecciona el vehiculo"
         className="max-w-xs"
-      /* isInvalid={error}
+        /* isInvalid={error}
       errorMessage={error ? "Por favor selecciona el tipo de vehiculo" : ""} */
       >
         {(item) => (
