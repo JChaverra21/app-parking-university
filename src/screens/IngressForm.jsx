@@ -4,7 +4,7 @@ import { UserContext } from "../contexts/UserContext";
 import Swal from "sweetalert2";
 
 const IngressForm = () => {
-  const { error, userRegister, addCarCell, carCells, motorcycleCells, addMotorcycleCell } = useContext(UserContext);
+  const { userRegister, addCarCell, carCells, motorcycleCells, addMotorcycleCell } = useContext(UserContext);
 
   const [idPlate, setIdPlate] = useState("");
   const [dateTime, setDateTime] = useState("");
@@ -14,6 +14,7 @@ const IngressForm = () => {
   const [newPlate, setNewPlate] = useState("");
   const [carSelected, setCarSelected] = useState({});
   const [vehicleUser, setVehicleUser] = useState([]);
+  const [errorIngress, setErrorIngress] = useState(false);
 
   const handleIdPlateChange = (e) => {
     setIdPlate(e.target.value.toUpperCase());
@@ -137,6 +138,12 @@ const IngressForm = () => {
   let regexMotorcycle = /^[A-Z]{3}\d{2}[A-Z]{1}$/;
 
   const handleIngress = (newPlate, cell) => {
+
+    if (dateTime === "" || cell === "") {
+      setErrorIngress(true);
+      return;
+    }
+
     if (regexCar.test(newPlate)) {
       console.log("placa de carro");
       addCarCell(newPlate, dateTime, cell);
@@ -180,7 +187,7 @@ const IngressForm = () => {
           {selected !== "placa" ? (
             <Autocomplete
               isRequired
-              label="Tipo de vehiculo"
+              label="Placa del vehiculo"
               defaultItems={vehicleUser.map((item, index) => ({ value: item, key: index }))}
               placeholder="Selecciona el vehiculo"
               onSelectionChange={() => {
@@ -190,8 +197,8 @@ const IngressForm = () => {
                 setCarSelected(validationPlate.vehiclesPlates.find((vehicle) => vehicle.plate === newPlate));
               }}
               className="max-w-xs"
-              isInvalid={error}
-              errorMessage={error ? "Por favor selecciona el tipo de vehiculo" : ""}
+              isInvalid={errorIngress}
+              errorMessage={errorIngress ? "Por favor selecciona la placa del vehiculo" : ""}
             >
               {(item) => (
                 <AutocompleteItem
@@ -210,9 +217,8 @@ const IngressForm = () => {
                 readOnly
                 label="Informacion vehiculo"
                 labelPlacement="outside"
-                defaultValue={`Marca: ${carSelected.brand}\n${
-                  carSelected.vehicleType === "car" ? "Modelo" : "Cilindraje"
-                }: ${carSelected.modelCylinder}`}
+                defaultValue={`Marca: ${carSelected.brand}\n${carSelected.vehicleType === "car" ? "Modelo" : "Cilindraje"
+                  }: ${carSelected.modelCylinder}`}
                 className="max-w-xs"
               />
             </>
@@ -227,6 +233,8 @@ const IngressForm = () => {
             value={dateTime}
             onChange={handleDateTimeChange}
             className="max-w-xs text-black"
+            isInvalid={errorIngress}
+            errorMessage={errorIngress ? "Por favor selecciona la fecha y hora de ingreso" : ""}
           />
 
           <Autocomplete
@@ -238,9 +246,9 @@ const IngressForm = () => {
             placeholder="Ingresa el numero de celda"
             defaultSelectedKey="1"
             className="max-w-xs"
-            isInvalid={error}
+            isInvalid={errorIngress}
             onSelectionChange={(e) => setCell(e)}
-            errorMessage={error ? "Por favor selecciona el tipo de vehiculo" : ""}
+            errorMessage={errorIngress ? "Por favor selecciona el numero de celda" : ""}
           >
             {(item) => (
               <AutocompleteItem value={item.cell} key={item.cell} className="text-black">
