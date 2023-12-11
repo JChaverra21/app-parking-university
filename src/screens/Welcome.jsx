@@ -29,7 +29,7 @@ const Welcome = () => {
 
   return (
     <section className="flex flex-col items-center  pt-20">
-      <img className="object-cover absolute top-0  w-screen h-screen" src="/src/assets/poliParking.jpeg" alt="Poli" />
+      <img className="object-cover absolute top-0  w-screen h-screen" src="/poliParking.jpeg" alt="Poli" />
       <div className="absolute top-0 w-screen h-screen bg-black opacity-80"></div>
       <User
         className="absolute top-0 right-0 z-10 pr-4 pt-4 text-white"
@@ -49,7 +49,7 @@ const Welcome = () => {
       </Button>
       <header className=" z-10 text-white">
         <div className="flex flex-col items-center">
-          <Image alt="Logo" src="/src/assets/iconoPoli.png" width="50" height="50" />
+          <Image alt="Logo" src="/iconoPoli.png" width="50" height="50" />
           <h4 className="font-bold text-large mb-4  ">PoliParking</h4>
         </div>
         <p className="text-lg mb-8">

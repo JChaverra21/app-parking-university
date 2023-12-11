@@ -28,7 +28,7 @@ export const CellMotorcycle = ({ item }) => {
           <Popover placement="bottom">
             <PopoverTrigger>
               <Image
-                src="/src/assets/motico.png"
+                src="/motico.png"
                 className="cursor-pointer   hover:scale-110"
                 width="1200"
                 height="200"

@@ -55,7 +55,7 @@ const Login = () => {
     <div className="flex justify-center items-center  bg-primary h-screen">
       <Card className="py-4 w-72">
         <CardHeader className="pb-0 pt-2 px-4 flex-col justify-center">
-          <Image src="/src/assets/iconoPoli.png" width="50" height="100" alt="icono" />
+          <Image src="/iconoPoli.png" width="50" height="100" alt="icono" />
           <h1 className="font-bold">PoliParking</h1>
         </CardHeader>
         <CardBody className="overflow-visible py-2">

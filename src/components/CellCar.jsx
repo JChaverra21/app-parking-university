@@ -29,13 +29,7 @@ export const CellCar = ({ item }) => {
         <div className="flex flex-col text-center">
           <Popover placement="bottom">
             <PopoverTrigger>
-              <Image
-                src="/src/assets/car.png"
-                className="cursor-pointer  hover:scale-110"
-                width="300"
-                height="100"
-                alt="icono"
-              />
+              <Image src="/car.png" className="cursor-pointer  hover:scale-110" width="300" height="100" alt="icono" />
             </PopoverTrigger>
             <PopoverContent className="text-center mt-4">
               {dataVehicle.vehicle ? (
